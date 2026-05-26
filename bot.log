@@ -35,3 +35,30 @@
 2026-05-25 23:05:42 INFO [LATERAL] Piso de rango (RSI 39.6 < 45) — comprando 8% disponible ($51.52)
 2026-05-25 23:05:42 INFO COMPRA  0.024606 ETH @ $2093.81 | gastado: $51.52 USDT
 2026-05-25 23:05:42 INFO [Portfolio] USDT: $842.48 | ETH: 0.075059 | Precio: $2093.81 | Avg compra: $2098.62 | Total: $999.64 | P&L: $-0.36 (-0.0%)
+2026-05-26 00:04:38 INFO === Ciclo único DCA+RSI ===
+2026-05-26 00:04:38 INFO Estado restaurado — USDT: $842.48 | ETH: 0.075059
+2026-05-26 00:04:42 INFO ETH/USDT: $2087.62 | RSI: 35.7 | ADX: 20.8 | MA20/50: $2114/$2110 | ATR ratio: 1.01 | Régimen: [LATERAL]
+2026-05-26 00:04:42 INFO [LATERAL] Rango $2088–$2136 | Precio en 0% del rango
+2026-05-26 00:04:42 INFO [LATERAL] Piso de rango (RSI 35.7 < 45) — comprando 8% disponible ($47.40)
+2026-05-26 00:04:42 INFO COMPRA  0.022705 ETH @ $2087.62 | gastado: $47.40 USDT
+2026-05-26 00:04:42 INFO [Portfolio] USDT: $795.08 | ETH: 0.097763 | Precio: $2087.62 | Avg compra: $2096.06 | Total: $999.17 | P&L: $-0.83 (-0.1%)
+2026-05-26 01:03:38 INFO === Ciclo único DCA+RSI ===
+2026-05-26 01:03:38 INFO Estado restaurado — USDT: $795.08 | ETH: 0.097763
+2026-05-26 01:03:41 INFO ETH/USDT: $2091.51 | RSI: 40.0 | ADX: 22.6 | MA20/50: $2113/$2110 | ATR ratio: 0.97 | Régimen: [LATERAL]
+2026-05-26 01:03:41 INFO [LATERAL] Rango $2089–$2136 | Precio en 6% del rango
+2026-05-26 01:03:41 INFO [LATERAL] Piso de rango (RSI 40.0 < 45) — comprando 8% disponible ($43.61)
+2026-05-26 01:03:41 INFO COMPRA  0.020849 ETH @ $2091.51 | gastado: $43.61 USDT
+2026-05-26 01:03:41 INFO [Portfolio] USDT: $751.48 | ETH: 0.118613 | Precio: $2091.51 | Avg compra: $2095.26 | Total: $999.55 | P&L: $-0.45 (-0.0%)
+2026-05-26 02:02:38 INFO === Ciclo único DCA+RSI ===
+2026-05-26 02:02:38 INFO Estado restaurado — USDT: $751.48 | ETH: 0.118613
+2026-05-26 02:02:42 INFO ETH/USDT: $2092.55 | RSI: 40.3 | ADX: 22.9 | MA20/50: $2112/$2109 | ATR ratio: 0.95 | Régimen: [LATERAL]
+2026-05-26 02:02:42 INFO [LATERAL] Rango $2089–$2136 | Precio en 8% del rango
+2026-05-26 02:02:42 INFO [LATERAL] Piso de rango (RSI 40.3 < 45) — comprando 8% disponible ($40.12)
+2026-05-26 02:02:42 INFO COMPRA  0.019172 ETH @ $2092.55 | gastado: $40.12 USDT
+2026-05-26 02:02:42 INFO [Portfolio] USDT: $711.36 | ETH: 0.137785 | Precio: $2092.55 | Avg compra: $2094.89 | Total: $999.68 | P&L: $-0.32 (-0.0%)
+2026-05-26 03:01:38 INFO === Ciclo único DCA+RSI ===
+2026-05-26 03:01:38 INFO Estado restaurado — USDT: $711.36 | ETH: 0.137785
+2026-05-26 03:01:42 INFO ETH/USDT: $2098.74 | RSI: 45.3 | ADX: 21.4 | MA20/50: $2111/$2109 | ATR ratio: 0.95 | Régimen: [LATERAL]
+2026-05-26 03:01:42 INFO [LATERAL] Rango $2089–$2136 | Precio en 21% del rango
+2026-05-26 03:01:42 INFO [LATERAL] Zona neutral — esperando piso o techo
+2026-05-26 03:01:42 INFO [Portfolio] USDT: $711.36 | ETH: 0.137785 | Precio: $2098.74 | Avg compra: $2094.89 | Total: $1000.53 | P&L: $+0.53 (+0.1%)

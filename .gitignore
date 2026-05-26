@@ -1,6 +1,5 @@
 # Estado del bot (dinámico, no commitear)
 state.json
-bot.log
 
 # Python
 __pycache__/

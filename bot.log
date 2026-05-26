@@ -95,3 +95,27 @@
 2026-05-26 07:56:41 INFO [LATERAL] Techo de rango (RSI 63.1 > 60) — vendiendo 20%
 2026-05-26 07:56:41 INFO VENTA   0.029617 ETH @ $2127.92 | recibido: $63.02 USDT
 2026-05-26 07:56:41 INFO [Portfolio] USDT: $703.51 | ETH: 0.141964 | Precio: $2127.92 | Avg compra: $2095.27 | Total: $1005.60 | P&L: $+5.60 (+0.6%)
+2026-05-26 08:55:38 INFO === Ciclo único DCA+RSI ===
+2026-05-26 08:55:38 INFO Estado restaurado — USDT: $703.51 | ETH: 0.141964
+2026-05-26 08:55:42 INFO ETH/USDT: $2123.00 | RSI: 59.2 | ADX: 22.6 | MA20/50: $2108/$2108 | ATR ratio: 1.09 | Régimen: [LATERAL]
+2026-05-26 08:55:42 INFO [LATERAL] Rango $2089–$2136 | Precio en 72% del rango
+2026-05-26 08:55:42 INFO [LATERAL] Zona neutral — esperando piso o techo
+2026-05-26 08:55:42 INFO [Portfolio] USDT: $703.51 | ETH: 0.141964 | Precio: $2123.00 | Avg compra: $2095.27 | Total: $1004.90 | P&L: $+4.90 (+0.5%)
+2026-05-26 09:54:42 INFO === Ciclo único DCA+RSI ===
+2026-05-26 09:54:42 INFO Estado restaurado — USDT: $703.51 | ETH: 0.141964
+2026-05-26 09:54:45 INFO ETH/USDT: $2125.11 | RSI: 59.9 | ADX: 22.2 | MA20/50: $2107/$2108 | ATR ratio: 1.09 | Régimen: [LATERAL]
+2026-05-26 09:54:45 INFO [LATERAL] Rango $2089–$2136 | Precio en 76% del rango
+2026-05-26 09:54:45 INFO [LATERAL] Zona neutral — esperando piso o techo
+2026-05-26 09:54:45 INFO [Portfolio] USDT: $703.51 | ETH: 0.141964 | Precio: $2125.11 | Avg compra: $2095.27 | Total: $1005.20 | P&L: $+5.20 (+0.5%)
+2026-05-26 10:53:39 INFO === Ciclo único DCA+RSI ===
+2026-05-26 10:53:39 INFO Estado restaurado — USDT: $703.51 | ETH: 0.141964
+2026-05-26 10:53:43 INFO ETH/USDT: $2124.40 | RSI: 59.2 | ADX: 22.2 | MA20/50: $2107/$2108 | ATR ratio: 1.14 | Régimen: [LATERAL]
+2026-05-26 10:53:43 INFO [LATERAL] Rango $2089–$2136 | Precio en 75% del rango
+2026-05-26 10:53:43 INFO [LATERAL] Zona neutral — esperando piso o techo
+2026-05-26 10:53:43 INFO [Portfolio] USDT: $703.51 | ETH: 0.141964 | Precio: $2124.40 | Avg compra: $2095.27 | Total: $1005.10 | P&L: $+5.10 (+0.5%)
+2026-05-26 11:52:39 INFO === Ciclo único DCA+RSI ===
+2026-05-26 11:52:39 INFO Estado restaurado — USDT: $703.51 | ETH: 0.141964
+2026-05-26 11:52:42 INFO ETH/USDT: $2115.83 | RSI: 53.9 | ADX: 22.8 | MA20/50: $2107/$2108 | ATR ratio: 1.25 | Régimen: [LATERAL]
+2026-05-26 11:52:42 INFO [LATERAL] Rango $2089–$2136 | Precio en 57% del rango
+2026-05-26 11:52:42 INFO [LATERAL] Zona neutral — esperando piso o techo
+2026-05-26 11:52:42 INFO [Portfolio] USDT: $703.51 | ETH: 0.141964 | Precio: $2115.83 | Avg compra: $2095.27 | Total: $1003.89 | P&L: $+3.89 (+0.4%)

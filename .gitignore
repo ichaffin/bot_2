@@ -1,0 +1,15 @@
+# Estado del bot (dinámico, no commitear)
+state.json
+bot.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Entorno virtual
+venv/
+
+# Entorno local
+.env

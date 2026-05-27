@@ -1,3 +1,10 @@
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+LIVE_TRADING = os.getenv("LIVE_TRADING", "false").lower() == "true"
+MIN_ORDER_USDT = 10.0  # mínimo notional Binance ETH/USDT
+
 SYMBOL = "ETH/USDT"
 TIMEFRAME = "1h"
 INITIAL_USDT = 1000
@@ -15,11 +22,19 @@ LATERAL_RANGE_CANDLES = 24    # velas para calcular rango de precio en lateral
 EXCHANGE_ID = "binance"
 DCA_INTERVAL_MINUTES = 59
 
+# --- Stop-loss global ---
+STOP_LOSS_TRIGGER_PCT = 0.12   # dispara si precio cae 12% bajo el avg_buy_price
+STOP_LOSS_SELL_PCT    = 0.30   # vende 30% del ETH vendible al disparar
+
+# --- Trailing stop global ---
+TRAILING_STOP_PCT      = 0.08  # dispara si precio cae 8% desde el pico
+TRAILING_STOP_SELL_PCT = 0.25  # vende 25% del ETH vendible al disparar
+
 # --- Position sizing porcentual ---
 # Todas las compras usan % del capital disponible (por encima de la reserva).
 # Decaimiento geométrico: cada compra es más chica que la anterior → nunca agota el capital.
 # Todas las ventas respetan un piso mínimo de ETH para siempre mantener posición.
-MIN_ETH_FLOOR_PCT = 0.05       # nunca vender por debajo de este % del capital inicial en valor ETH
+MIN_ETH_FLOOR_PCT = 0.05       # piso absoluto: nunca vender por debajo de este % del capital inicial en valor ETH
 
 # --- ALCISTA: Trend Rider ---
 BULL_RESERVE_PCT = 0.20
@@ -27,6 +42,7 @@ BULL_BUY_PCT = 0.08            # compra 8% del disponible en cada pullback (cons
 BULL_RSI_BUY_MIN = 40
 BULL_RSI_BUY_MAX = 50
 BULL_SELL_PCT = 0.15           # vende 15% del ETH vendible si precio rompe MA20
+BULL_ETH_FLOOR_PCT = 0.25      # piso de venta en MA break: siempre deja 25% del capital inicial equiv en ETH
 
 # --- BAJISTA: Defensive DCA ---
 BEAR_RESERVE_PCT = 0.40

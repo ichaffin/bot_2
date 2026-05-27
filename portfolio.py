@@ -19,8 +19,10 @@ class Portfolio:
     usdt: float
     eth: float = 0.0
     trades: list = field(default_factory=list)
-    total_usdt_invested: float = 0.0  # acumulado entre sesiones para avg price
+    total_usdt_invested: float = 0.0
     total_eth_bought: float = 0.0
+    realized_pnl: float = 0.0
+    price_peak: float = 0.0
 
     def buy(self, price: float, usdt_amount: float) -> Trade | None:
         if usdt_amount > self.usdt:
@@ -47,7 +49,18 @@ class Portfolio:
             logger.warning(f"ETH insuficiente. Disponible: {self.eth:.6f}, requerido: {eth_amount:.6f}")
             return None
         usdt_received = eth_amount * price
-        self.eth -= eth_amount
+
+        # Ajustar cost basis proporcionalmente al ETH vendido
+        if self.total_eth_bought > 0:
+            cost_basis = eth_amount * (self.total_usdt_invested / self.total_eth_bought)
+            self.total_usdt_invested -= cost_basis
+            self.total_eth_bought    -= eth_amount
+            trade_pnl = usdt_received - cost_basis
+            self.realized_pnl += trade_pnl
+        else:
+            trade_pnl = 0.0
+
+        self.eth  -= eth_amount
         self.usdt += usdt_received
         trade = Trade(
             timestamp=datetime.now(),
@@ -57,7 +70,10 @@ class Portfolio:
             amount_usdt=usdt_received,
         )
         self.trades.append(trade)
-        logger.info(f"VENTA   {eth_amount:.6f} ETH @ ${price:.2f} | recibido: ${usdt_received:.2f} USDT")
+        logger.info(
+            f"VENTA   {eth_amount:.6f} ETH @ ${price:.2f} | recibido: ${usdt_received:.2f} USDT | "
+            f"P&L realizado: ${trade_pnl:+.2f} (acum: ${self.realized_pnl:+.2f})"
+        )
         return trade
 
     def total_value(self, current_price: float) -> float:
@@ -80,5 +96,6 @@ class Portfolio:
         return (
             f"[Portfolio] USDT: ${self.usdt:.2f} | ETH: {self.eth:.6f} | "
             f"Precio: ${current_price:.2f} | Avg compra: {avg_str} | "
-            f"Total: ${total:.2f} | P&L: ${pnl:+.2f} ({pnl_pct:+.1f}%)"
+            f"Total: ${total:.2f} | P&L: ${pnl:+.2f} ({pnl_pct:+.1f}%) | "
+            f"P&L realizado: ${self.realized_pnl:+.2f}"
         )

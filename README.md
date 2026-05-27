@@ -1,13 +1,8 @@
-# Bot DCA + RSI — ETH/USDT (Paper Trading)
+# Bot DCA + Multi-Régimen — ETH/USDT (Live Trading)
 
 ## Qué es
 
-Bot de trading automatizado para el par ETH/USDT que combina dos estrategias:
-
-- **DCA (Dollar Cost Averaging)**: compra una cantidad fija de ETH a intervalos regulares, promediando el precio de entrada a lo largo del tiempo.
-- **RSI (Relative Strength Index)**: ajusta el comportamiento según si el mercado está sobrevendido o sobrecomprado.
-
-Corre en modo **paper trading** (dinero simulado) para validar la estrategia antes de arriesgar capital real.
+Bot de trading automatizado para el par ETH/USDT que combina DCA con detección de régimen de mercado y protecciones activas. Corre en **live trading** sobre Binance SPOT.
 
 ---
 
@@ -15,34 +10,28 @@ Corre en modo **paper trading** (dinero simulado) para validar la estrategia ant
 
 Cada 59 minutos el bot ejecuta un ciclo:
 
-1. Descarga las últimas velas de ETH/USDT desde Binance (API pública, sin API key)
-2. Calcula el RSI de 14 períodos
-3. Decide la acción según el RSI:
+1. Descarga las últimas velas de ETH/USDT desde Binance
+2. Detecta el régimen de mercado actual (ALCISTA / BAJISTA / LATERAL / VOLÁTIL)
+3. Ejecuta la estrategia correspondiente
+4. Verifica stop-loss y trailing stop antes de cualquier acción
+5. Ejecuta la orden real en Binance SPOT
+6. Guarda el estado en `state.json` y registra todo en `bot_real.log`
 
-| RSI | Acción |
-|---|---|
-| < 30 (sobrevendido) | Compra doble ($100) — dip agresivo |
-| 30 – 70 (neutral) | Compra normal ($50) |
-| > 70 (sobrecomprado) | Vende el 15% del ETH acumulado |
+### Regímenes y lógica
 
-4. Respeta siempre una **reserva mínima de $300 USDT** (30% del capital) — nunca toca ese colchón
-5. Guarda el estado en `state.json` y registra todo en `bot.log`
+| Régimen | Condición | Compra | Vende |
+|---|---|---|---|
+| ALCISTA | ADX ≥ 25 + MA20 > MA50 | 8% disponible si RSI 40–50 | 15% si precio rompe MA20 |
+| BAJISTA | ADX ≥ 25 + MA20 < MA50 | 10–20% disponible según RSI | 15% si RSI > 65 (rebote) |
+| LATERAL | ADX < 25 | 8% en piso de rango (RSI < 45) | 20% en techo de rango (RSI > 60) |
+| VOLÁTIL | ATR actual > 1.5× ATR promedio | 45% en RSI < 25 | 20% si RSI > 75 |
 
----
+### Protecciones globales (pre-régimen)
 
-## Configuración actual
-
-| Parámetro | Valor |
-|---|---|
-| Par | ETH/USDT |
-| Capital inicial | $1,000 USDT |
-| Reserva mínima | $300 USDT (30%) |
-| Capital operable | $700 USDT |
-| DCA base por ciclo | $50 |
-| DCA boost (RSI < 30) | $100 (x2) |
-| Venta en sobrecompra | 15% del ETH cuando RSI > 70 |
-| Intervalo | 59 minutos (Task Scheduler) |
-| Exchange datos | Binance (público) |
+| Protección | Trigger | Acción |
+|---|---|---|
+| Stop-loss | Precio 12% bajo avg compra | Vende 30%, pausa compras |
+| Trailing stop | Precio cae 8% desde el pico | Vende 25%, pausa compras |
 
 ---
 
@@ -50,71 +39,104 @@ Cada 59 minutos el bot ejecuta un ciclo:
 
 | Archivo | Descripción |
 |---|---|
-| `main.py` | Entry point. `--once` para un ciclo, sin flag para bucle continuo |
-| `strategy.py` | Lógica DCA + RSI |
-| `portfolio.py` | Portfolio simulado con compra, venta y métricas |
-| `market.py` | Conexión a Binance para precios y velas |
+| `main.py` | Entry point. Flags: `--once`, `--live-init` |
+| `strategy.py` | Lógica multi-régimen + stop-loss + trailing stop |
+| `portfolio.py` | Estado del portfolio, P&L realizado, avg compra |
+| `market.py` | Conexión a Binance (datos + órdenes reales) |
+| `regime.py` | Detección de régimen (RSI, ADX, ATR, MA) |
 | `config.py` | Todos los parámetros ajustables |
+| `backtest.py` | Backtest histórico. Flags: `--horas N`, `--split` |
 | `state.json` | Estado persistente del portfolio entre ciclos |
-| `bot.log` | Historial completo de operaciones |
+| `bot_real.log` | Log de operaciones en vivo |
+| `.env` | API keys de Binance (no commitear) |
+| `run.sh` | Script de arranque manual |
 
 ---
 
-## Cómo correrlo
+## Setup inicial (primera vez)
 
-```powershell
-# Un ciclo manual
-.\venv\Scripts\python.exe main.py --once
+```bash
+# 1. Crear entorno virtual e instalar dependencias
+python3 -m venv venv
+venv/bin/pip install -r requirements.txt
 
-# Bucle continuo (manual, Ctrl+C para detener)
-.\venv\Scripts\python.exe main.py
-```
+# 2. Configurar API keys
+cp .env.example .env
+# Editar .env con las keys de Binance
 
-El Task Scheduler ya está configurado para correrlo automáticamente cada 59 minutos con la tarea `DCA_RSI_Bot`.
+# 3. Leer saldo real de Binance SPOT y crear state.json
+venv/bin/python3 main.py --live-init
 
-```powershell
-# Ver estado de la tarea
-Get-ScheduledTask -TaskName "DCA_RSI_Bot"
-
-# Correr ahora manualmente
-Start-ScheduledTask -TaskName "DCA_RSI_Bot"
-
-# Pausar
-Disable-ScheduledTask -TaskName "DCA_RSI_Bot"
+# 4. Registrar en launchd para arranque automático
+launchctl load ~/Library/LaunchAgents/com.bot.eth.plist
 ```
 
 ---
 
-## Qué esperamos de esta prueba
+## Comandos rápidos
 
-### Hipótesis
-La combinación de DCA con señales RSI debería superar a un DCA puro en mercados volátiles, comprando más en caídas y recuperando capital en subidas.
+### Bot
 
-### Métricas a evaluar (próximas semanas)
+```bash
+# Ver si el bot está corriendo
+launchctl list | grep com.bot.eth
 
-- **P&L total** al cabo de 30 días
-- **Precio promedio de compra** vs precio de mercado — queremos que la estrategia acumule por debajo del precio spot
-- **Cuántas veces se activó el boost** (RSI < 30) y si coincidieron con pisos de precio
-- **Cuántas ventas** se ejecutaron y si mejoraron el P&L vs hold puro
-- **Uso de la reserva** — ¿alcanzó el límite de $300? ¿cuántas veces?
+# Ver log en vivo
+tail -f bot_real.log
 
-### Señales de que funciona bien
-- Avg compra < precio de mercado a fin del período
-- P&L positivo o menor pérdida que un hold puro desde el mismo punto de entrada
-- Las ventas (RSI > 70) coinciden con techos de precio
+# Correr un ciclo manual ahora (sin tocar el loop)
+venv/bin/python3 main.py --once
 
-### Señales de que hay que ajustar
-- Se queda sin capital operable muy rápido sin que el precio suba
-- Las ventas cortan tendencias alcistas demasiado pronto
-- El RSI no genera señales útiles en mercado lateral prolongado
+# Ver estado actual del portfolio
+tail -1 bot_real.log | grep Portfolio
+```
+
+### Arranque y parada
+
+```bash
+# Iniciar bot (y activar arranque automático al login)
+launchctl load ~/Library/LaunchAgents/com.bot.eth.plist
+
+# Parar bot (y desactivar arranque automático)
+launchctl unload ~/Library/LaunchAgents/com.bot.eth.plist
+
+# Reiniciar bot (tras cambios en el código)
+launchctl unload ~/Library/LaunchAgents/com.bot.eth.plist
+launchctl load   ~/Library/LaunchAgents/com.bot.eth.plist
+```
+
+### Reset y re-sincronización
+
+```bash
+# Re-leer saldo real de Binance (tras transferencias o cambios manuales)
+launchctl unload ~/Library/LaunchAgents/com.bot.eth.plist
+rm state.json
+venv/bin/python3 main.py --live-init
+launchctl load ~/Library/LaunchAgents/com.bot.eth.plist
+```
+
+### Backtest
+
+```bash
+# Últimas 96 horas desde cero (100% USDT)
+venv/bin/python3 backtest.py --horas 96
+
+# Últimas 96 horas con ETH pre-existente (50/50)
+venv/bin/python3 backtest.py --horas 96 --split
+```
 
 ---
 
-## Aprendizajes de la primera semana (16–25 mayo 2026)
+## Aprendizajes
 
-La prueba anterior (sin reserva ni venta) reveló dos problemas:
+### Primera semana (16–25 mayo 2026) — versión sin protecciones
+1. **Agotó el capital en ~20 horas** comprando cada ciclo sin límite.
+2. **Sin lógica de venta**: detectaba sobrecompra pero no actuaba. Resultado: -3.6%.
 
-1. **Agotó el capital en ~20 horas** comprando cada ciclo sin límite, quedando sin USDT justo antes de que ETH bajara.
-2. **Sin lógica de venta**: detectaba sobrecompra pero no aprovechaba para tomar ganancia. Resultado: -3.6% al cierre.
-
-Ambos problemas están corregidos en la versión actual.
+### Versión actual (desde 26 mayo 2026) — mejoras implementadas
+- **P&L realizado**: al vender se ajusta el cost basis → avg compra siempre correcto
+- **Stop-loss global**: corta pérdidas si el precio cae >12% bajo el avg de compra
+- **Trailing stop**: protege ganancias si el precio cae >8% desde el pico
+- **Piso de venta ALCISTA**: evita drenar la posición en cascada al romper MA20
+- **Live trading**: órdenes reales ejecutadas en Binance SPOT via API
+- **Arranque automático**: launchd reinicia el bot tras reboot de Mac respetando el intervalo

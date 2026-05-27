@@ -12,3 +12,6 @@ venv/
 
 # Entorno local
 .env
+
+# Logs de runtime
+*.log
